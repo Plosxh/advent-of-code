@@ -12,7 +12,7 @@ print(url)
 
 with open("/".join(work_dir[:-2])+"/config.json","r") as file:
     headers = json.load(file)
-    code = requests.get("https://adventofcode.com/2020/day/1/input", headers=headers)
+    code = requests.get(url, headers=headers)
     open("./inputs.txt","wb").write(code.content)
     shutil.copy("/".join(work_dir[:-2])+"/base.py","./main.py")
 
