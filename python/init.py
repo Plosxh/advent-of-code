@@ -1,18 +1,28 @@
 import os
 import requests
+import argparse
+import sys
 import shutil
 import json
 
-work_dir = os.getcwd().split("/")
-print(work_dir)
-day = work_dir[len(work_dir)-1]
-year = work_dir[len(work_dir)-2]
-url = "https://adventofcode.com/{}/day/{}/input".format(year,day)
-print(url)
 
-with open("/".join(work_dir[:-2])+"/config.json","r") as file:
-    headers = json.load(file)
-    code = requests.get(url, headers=headers)
-    open("./inputs.txt","wb").write(code.content)
-    shutil.copy("/".join(work_dir[:-2])+"/base.py","./main.py")
+def main(args=sys.argv[1:]):
+    parser = argparse.ArgumentParser(description="Advent of Code initer.")
+    parser.add_argument("-y","--year",help="input year like : YYYY")
+    parser.add_argument("-d","--day",help="input day like : D")
+    options = parser.parse_args(args)
+
+    work_dir = os.getcwd()
+    target_dir = f"{work_dir}/{options.year}/{options.day}"
+    url = f"https://adventofcode.com/{options.year}/day/{options.day}/input"
+
+    with open(work_dir+"/config.json","r") as file:
+        headers = json.load(file)
+        code = requests.get(url, headers=headers)
+        open(f"{target_dir}/inputs.txt","wb").write(code.content)
+        shutil.copy(f"{work_dir}/base.py",f"{target_dir}/main.py")
+
+
+if __name__ == '__main__':
+    main()
 
